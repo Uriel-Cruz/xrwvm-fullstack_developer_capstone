@@ -42,4 +42,4 @@ class CarModel(models.Model):
     horsepower = models.PositiveIntegerField(blank=True, null=True)
     
     def __str__(self):
-        return self.car_make.name + " " + self.name + " (" + str(self.year.year) + ") - " + self.type
+        return self.car_make.name + " " + self.name + " (" + str(self.year) + ") - " + self.type
