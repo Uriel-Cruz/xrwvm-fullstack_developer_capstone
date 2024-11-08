@@ -37,7 +37,8 @@ class CarModel(models.Model):
         ]
     )
     horsepower = models.PositiveIntegerField(blank=True, null=True)
-    
+
+
     def __str__(self):
         return (
             f"{self.car_make.name} {self.name} ({self.year}) - {self.type}"

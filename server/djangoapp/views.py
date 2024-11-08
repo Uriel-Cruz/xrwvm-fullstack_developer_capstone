@@ -1,10 +1,10 @@
 # Uncomment the required imports before adding the code
 
-from django.shortcuts import render, redirect
+#from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login, authenticate
 from django.http import JsonResponse
-from datetime import datetime
+#from datetime import datetime
 from .models import CarMake, CarModel
 import logging
 import json
@@ -14,6 +14,7 @@ from .restapis import get_request, analyze_review_sentiments, post_review
 
 # Instance of a logger
 logger = logging.getLogger(__name__)
+
 
 # Method to get the list of cars
 def get_cars(request):
@@ -81,9 +82,11 @@ def registration(request):
             email=email
         )
         login(request, user)
-        return JsonResponse({"userName": username, "status": "Authenticated"})
+        return JsonResponse({"userName": username, \
+        "status": "Authenticated"})
     else:
-        return JsonResponse({"userName": username, "error": "Already Registered"})
+        return JsonResponse({"userName": username, \
+        "error": "Already Registered"})
 
 
 # Update `get_dealerships` view to render list of dealerships
@@ -110,7 +113,8 @@ def get_dealer_reviews(request, dealer_id):
                 review_detail['sentiment'] = response['sentiment']
             else:
                 review_detail['sentiment'] = 'unknown'
-                print(f"Advertencia: No se pudo analizar el sentimiento para la reseña: "
+                print(f"Advertencia: No se pudo analizar el \
+                sentimiento para la reseña: "
                       f"{review_detail.get('review')}")
 
         return JsonResponse({"status": 200, "reviews": reviews})
@@ -133,9 +137,10 @@ def add_review(request):
     if not request.user.is_anonymous:
         data = json.loads(request.body)
         try:
-            response = post_review(data)
+            # response = post_review(data)
             return JsonResponse({"status": 200})
-        except Exception as e:
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+        except Exception:
+            return JsonResponse({"status": 401, "message": "Error in posting \
+            review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
