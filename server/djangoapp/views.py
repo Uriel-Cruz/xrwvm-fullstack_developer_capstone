@@ -87,15 +87,17 @@ def registration(request):
         })
     else:
         return JsonResponse({
-            "userName": username, 
+            "userName": username,
             "error": "Already Registered"
         })
+
 
 # Update `get_dealerships` view to render list of dealerships
 def get_dealerships(request, state="All"):
     endpoint = "/fetchDealers" if state == "All" else f"/fetchDealers/{state}"
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
+
 
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
 def get_dealer_reviews(request, dealer_id):
@@ -104,7 +106,10 @@ def get_dealer_reviews(request, dealer_id):
         reviews = get_request(endpoint)
 
         if reviews is None:
-            return JsonResponse({"status": 500, "message": "Error al obtener reseñas."})
+            return JsonResponse({
+                "status": 500, 
+                "message": "Error al obtener reseñas."
+                })
 
         for review_detail in reviews:
             response = analyze_review_sentiments(review_detail.get('review'))
@@ -117,7 +122,6 @@ def get_dealer_reviews(request, dealer_id):
                 print(f"Advertencia: No se pudo analizar el \
                 sentimiento para la reseña: "
                       f"{review_detail.get('review')}")
-
 
         return JsonResponse({"status": 200, "reviews": reviews})
     else:
@@ -142,7 +146,7 @@ def add_review(request):
             return JsonResponse({"status": 200})
         except Exception:
             return JsonResponse({
-                "status": 401, 
+                "status": 401,
                 "message": "Error in posting review"
                 })
     else:
