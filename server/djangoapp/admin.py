@@ -3,7 +3,7 @@ from .models import CarMake, CarModel
 
 
 class CarMakeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country_of_origin') 
+    list_display = ('name', 'country_of_origin')
     search_fields = ('name', 'country_of_origin')
 
 
