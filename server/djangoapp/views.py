@@ -107,7 +107,7 @@ def get_dealer_reviews(request, dealer_id):
 
         if reviews is None:
             return JsonResponse({
-                "status": 500, 
+                "status": 500,
                 "message": "Error al obtener reseñas."
                 })
 
@@ -136,6 +136,7 @@ def get_dealer_details(request, dealer_id):
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
+
 
 # Create a `add_review` view to submit a review
 def add_review(request):
