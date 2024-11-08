@@ -10,10 +10,11 @@ import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
 from .populate import initiate
-from .restapis import get_request, analyze_review_sentiments, post_review
+from .restapis import get_request, analyze_review_sentiments
 
 # Instance of a logger
 logger = logging.getLogger(__name__)
+
 
 # Method to get the list of cars
 def get_cars(request):
@@ -27,6 +28,7 @@ def get_cars(request):
         for car_model in car_models
     ]
     return JsonResponse({"CarModels": cars})
+
 
 # Create a `login_user` view to handle sign in request
 @csrf_exempt
@@ -44,10 +46,12 @@ def login_user(request):
         response_data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(response_data)
 
+
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
     return JsonResponse({"userName": ""})
+
 
 # Create a `registration` view to handle sign up request
 @csrf_exempt
@@ -77,9 +81,15 @@ def registration(request):
             email=email
         )
         login(request, user)
-        return JsonResponse({"userName": username, "status": "Authenticated"})
+        return JsonResponse({
+            "userName": username,
+            "status": "Authenticated"
+        })
     else:
-        return JsonResponse({"userName": username, "error": "Already Registered"})
+        return JsonResponse({
+            "userName": username, 
+            "error": "Already Registered"
+        })
 
 # Update `get_dealerships` view to render list of dealerships
 def get_dealerships(request, state="All"):
@@ -108,9 +118,11 @@ def get_dealer_reviews(request, dealer_id):
                 sentimiento para la reseña: "
                       f"{review_detail.get('review')}")
 
+
         return JsonResponse({"status": 200, "reviews": reviews})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
+
 
 # Create a `get_dealer_details` view to render the dealer details
 def get_dealer_details(request, dealer_id):
@@ -124,11 +136,14 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 def add_review(request):
     if not request.user.is_anonymous:
-        data = json.loads(request.body)
+        # data = json.loads(request.body)
         try:
             # response = post_review(data)
             return JsonResponse({"status": 200})
         except Exception:
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+            return JsonResponse({
+                "status": 401, 
+                "message": "Error in posting review"
+                })
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
