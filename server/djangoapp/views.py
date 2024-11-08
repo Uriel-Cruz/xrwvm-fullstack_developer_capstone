@@ -107,17 +107,31 @@ def get_dealerships(request, state="All"):
 # def get_dealer_reviews(request,dealer_id):
 # ...
 def get_dealer_reviews(request, dealer_id):
-    # if dealer id has been provided
-    if(dealer_id):
-        endpoint = "/fetchReviews/dealer/"+str(dealer_id)
+    # Si se proporciona dealer_id
+    if dealer_id:
+        endpoint = "/fetchReviews/dealer/" + str(dealer_id)
         reviews = get_request(endpoint)
+
+        # Verifica si `reviews` no es `None`
+        if reviews is None:
+            return JsonResponse({"status": 500, "message": "Error al obtener reseñas."})
+
         for review_detail in reviews:
-            response = analyze_review_sentiments(review_detail['review'])
-            print(response)
-            review_detail['sentiment'] = response['sentiment']
-        return JsonResponse({"status":200,"reviews":reviews})
+            # Llama a analyze_review_sentiments y verifica el resultado
+            response = analyze_review_sentiments(review_detail.get('review'))
+            
+            # Verifica si response no es None y contiene la clave 'sentiment'
+            if response and 'sentiment' in response:
+                review_detail['sentiment'] = response['sentiment']
+            else:
+                # Asigna un valor por defecto si no se puede determinar el sentimiento
+                review_detail['sentiment'] = 'unknown'
+                print(f"Advertencia: No se pudo analizar el sentimiento para la reseña: {review_detail.get('review')}")
+
+        return JsonResponse({"status": 200, "reviews": reviews})
+
     else:
-        return JsonResponse({"status":400,"message":"Bad Request"})
+        return JsonResponse({"status": 400, "message": "Bad Request"})
 
 # Create a `get_dealer_details` view to render the dealer details
 # def get_dealer_details(request, dealer_id):
